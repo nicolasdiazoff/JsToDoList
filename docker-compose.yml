@@ -27,7 +27,7 @@ services:
       - ./todo.api/:/usr/src/app
     ports:
       - '4000:4000'
-    command: npm run start 
+    command: npm run start:dev
     networks:
       - todo-net 
   node-react:
