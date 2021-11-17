@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mysql
+    container_name: 'todo_mysql'
+    restart: always
+    env_file: .env
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - todo-net
+    volumes:
+      - ~/docker/mysql-data-todo:/var/lib/mysql
+  node-api:
+    image: node:16-alpine 
+    container_name: 'todo_api'
+    user: 'node'
+    working_dir: /usr/src/app
+    env_file: .env
+    depends_on:
+      - mysql
+    volumes:
+      - ./todo.api/:/usr/src/app
+    ports:
+      - '4000:4000'
+    command: npm run start 
+    networks:
+      - todo-net 
+  node-react:
+    image: node:16-alpine 
+    container_name: 'node_react'
+    user: 'node'
+    working_dir: /usr/src/app
+    env_file: .env
+    depends_on:
+      - node-api 
+    volumes:
+      - ./todo.react/:/usr/src/app
+    ports:
+      - '3000:3000'
+    command: npm run start 
+    networks:
+      - todo-net
+
+networks:
+  todo-net:
