@@ -1,28 +1,12 @@
 version: '3.3'
 
 services:
-  mysql:
-    image: mysql
-    container_name: 'todo_mysql'
-    restart: always
-    env_file: .env
-    ports:
-      - '3306:3306'
-    expose:
-      - '3306'
-    command: --default-authentication-plugin=mysql_native_password
-    networks:
-      - todo-net
-    volumes:
-      - ~/docker/mysql-data-todo:/var/lib/mysql
   node-api:
     image: node:16-alpine 
     container_name: 'todo_api'
     user: 'node'
     working_dir: /usr/src/app
     env_file: .env
-    depends_on:
-      - mysql
     volumes:
       - ./todo.api/:/usr/src/app
     ports:
